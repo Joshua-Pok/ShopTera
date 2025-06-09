@@ -1,5 +1,6 @@
 package com.joshuapok.buynowdotcom.service.product;
 
+import com.joshuapok.buynowdotcom.Dto.ProductDto;
 import com.joshuapok.buynowdotcom.Requests.AddProductRequest;
 import com.joshuapok.buynowdotcom.Requests.ProductUpdateRequest;
 import com.joshuapok.buynowdotcom.model.Product;
@@ -17,4 +18,8 @@ public interface ProductService {
     List<Product> getProductsByName(String name);
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByBrand(String brand);
+
+    ProductDto convertToDto(Product product);
+
+    List<ProductDto> getConvertedProducts(List<Product> products);
 }

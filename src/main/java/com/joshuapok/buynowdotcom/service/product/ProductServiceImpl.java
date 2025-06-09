@@ -1,15 +1,15 @@
 package com.joshuapok.buynowdotcom.service.product;
 
-import com.joshuapok.buynowdotcom.Repository.CartItemRepository;
-import com.joshuapok.buynowdotcom.Repository.CategoryRepository;
-import com.joshuapok.buynowdotcom.Repository.OrderItemRepository;
-import com.joshuapok.buynowdotcom.Repository.ProductRepository;
+import com.joshuapok.buynowdotcom.Dto.ImageDto;
+import com.joshuapok.buynowdotcom.Dto.ProductDto;
+import com.joshuapok.buynowdotcom.Repository.*;
 import com.joshuapok.buynowdotcom.Requests.AddProductRequest;
 import com.joshuapok.buynowdotcom.Requests.ProductUpdateRequest;
 import com.joshuapok.buynowdotcom.model.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +23,8 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ModelMapper modelMapper;
+    private final ImageRepository imageRepository;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -134,5 +136,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProductsByBrand(String brand) {
         return productRepository.findByBrand(brand);
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product){
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream().map(image -> modelMapper.map(image, ImageDto.class)).toList();
+        productDto.setImages(imageDtos);
+        return productDto;
+    }
+
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products){
+        return products.stream().map(this::convertToDto).toList();
     }
 }

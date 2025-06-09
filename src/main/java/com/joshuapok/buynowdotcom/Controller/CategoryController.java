@@ -76,7 +76,7 @@ public class CategoryController {
             categoryService.findCategoryById(id);
             return ResponseEntity.ok(new ApiResponse("Category Deleted", null));
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOTFOUND).body(new ApiResponse("Error: ", null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Error: ", null));
         }
     }
 
