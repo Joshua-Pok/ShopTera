@@ -27,13 +27,10 @@ public class ImageController {
 
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse> uploadImages(@RequestParam List<MultipartFile> files,@RequestParam Long productId) {
-        try {
             List<ImageDto> imageDto = imageService.saveImages(productId, files);
             return ResponseEntity.ok(new ApiResponse("Images loaded successfully!", imageDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Upload Error", e.getMessage()));
-        }
     }
+
     @GetMapping("/image/download/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
         Image image = imageService.getImageById(imageId);
@@ -45,22 +42,15 @@ public class ImageController {
     @PutMapping("/image/update/{imageid}")
     public ResponseEntity<ApiResponse> updateImage(@RequestParam MultipartFile file, @RequestParam Long imageId){
         Image image = imageService.getImageById(imageId);
-        try {
             imageService.updateImage(file, imageId);
             return ResponseEntity.ok(new ApiResponse("Image updated successfully", null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Update Image Error", e.getMessage()));
-        }
     }
 
     @DeleteMapping
     public ResponseEntity<ApiResponse> deleteImage(@RequestParam Long imageId){
-        try {
             imageService.deleteImageById(imageId);
             return ResponseEntity.ok(new ApiResponse("Image deleted successfully", null));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Delete Image Error", e.getMessage()));
-        }
+
     }
 
 
